@@ -610,7 +610,7 @@
         <div class="header">
             <h1>MagicCardPrint Badge Designer</h1>
             <p>Design custom PVC ID badges with unlimited fields & templates</p>
-            <a href="https://magiccardprint.square.site/s/cart" target="_blank" style="display: inline-block; margin-top: 15px; padding: 10px 25px; background: white; color: #000; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 14px;">🛒 Go to Cart & Checkout</a>
+            <a href="https://magiccardprint.square.site" target="_blank" style="display: inline-block; margin-top: 15px; padding: 10px 25px; background: white; color: #000; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 14px;">← Back to MagicCardPrint</a>
         </div>
 
         <div class="content">
@@ -3020,22 +3020,41 @@ MagicCardPrint - Professional ID Card Printing Solutions
                     additionalInstructions: additionalInstructions || 'None'
                 };
                 
-                // Get front image from canvas
+                // Get front image from canvas at FULL PRINT RESOLUTION
                 saveCurrentSide();
                 const frontTab = document.querySelector('.tab.active');
-                const isOnBack = frontTab && frontTab.textContent.includes('Back');
+                const wasOnBack = frontTab && frontTab.textContent.includes('Back');
                 
-                if (isOnBack) {
+                // Make sure we're on the front side first
+                if (wasOnBack) {
                     switchToFront();
-                    await new Promise(resolve => setTimeout(resolve, 100));
+                    await new Promise(resolve => setTimeout(resolve, 200));
                 }
                 
-                const frontImage = canvas.toDataURL('image/png', 1.0);
+                // Export front at full resolution (1012 × 638) for print quality
+                const frontImage = canvas.toDataURL({
+                    format: 'png',
+                    quality: 1,
+                    multiplier: 1 / SCALE  // Scale back up to full size
+                });
                 
                 // Get back image if double-sided
                 let backImage = null;
-                if (badgeStyle === 'double' && backSideData) {
-                    backImage = backSideData;
+                if (badgeStyle === 'double') {
+                    // Switch to back side to export it
+                    switchToBack();
+                    await new Promise(resolve => setTimeout(resolve, 200));
+                    
+                    // Export back at full resolution
+                    backImage = canvas.toDataURL({
+                        format: 'png',
+                        quality: 1,
+                        multiplier: 1 / SCALE
+                    });
+                    
+                    // Switch back to front
+                    switchToFront();
+                    await new Promise(resolve => setTimeout(resolve, 100));
                 }
                 
                 // Upload to Cloudinary
