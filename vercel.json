@@ -1,0 +1,10 @@
+{
+  "functions": {
+    "api/upload-design.js": {
+      "maxDuration": 60
+    },
+    "api/create-checkout.js": {
+      "maxDuration": 30
+    }
+  }
+}
