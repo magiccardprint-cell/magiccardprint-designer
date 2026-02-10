@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thank You - MagicCardPrint</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 50px;
+            max-width: 600px;
+            text-align: center;
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 30px;
+        }
+
+        .success-icon svg {
+            width: 40px;
+            height: 40px;
+            color: white;
+        }
+
+        h1 {
+            color: #1a1a2e;
+            font-size: 32px;
+            margin-bottom: 15px;
+        }
+
+        .subtitle {
+            color: #28a745;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 25px;
+        }
+
+        p {
+            color: #555;
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .order-info {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 25px 0;
+            text-align: left;
+        }
+
+        .order-info h3 {
+            color: #333;
+            font-size: 16px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .info-label {
+            color: #666;
+        }
+
+        .info-value {
+            color: #333;
+            font-weight: 600;
+        }
+
+        .next-steps {
+            background: #e8f5e9;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 25px 0;
+            text-align: left;
+        }
+
+        .next-steps h3 {
+            color: #2e7d32;
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+
+        .next-steps ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .next-steps li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+            color: #555;
+            font-size: 14px;
+        }
+
+        .next-steps li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 14px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s;
+            margin: 10px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        .footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+            color: #888;
+            font-size: 14px;
+        }
+
+        .footer a {
+            color: #667eea;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="success-icon">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
+            </svg>
+        </div>
+
+        <h1>Thank You!</h1>
+        <p class="subtitle">Your order has been placed successfully</p>
+
+        <p>We've received your badge order and design files. You'll receive a confirmation email shortly with your order details.</p>
+
+        <div class="order-info">
+            <h3>📋 Order Information</h3>
+            <div class="info-row">
+                <span class="info-label">Order Status:</span>
+                <span class="info-value" style="color: #28a745;">Confirmed ✓</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Design Files:</span>
+                <span class="info-value">Received ✓</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Payment:</span>
+                <span class="info-value">Processed ✓</span>
+            </div>
+        </div>
+
+        <div class="next-steps">
+            <h3>🚀 What Happens Next?</h3>
+            <ul>
+                <li>We'll review your design within 24 hours</li>
+                <li>If you requested proof approval, we'll send a proof for your review</li>
+                <li>Once approved, your badges will be printed with HoloKote security</li>
+                <li>Your order will be shipped and tracking info sent via email</li>
+            </ul>
+        </div>
+
+        <div>
+            <a href="https://magiccardprint.square.site" class="btn btn-primary">Return to Shop</a>
+            <a href="https://magiccardprint-designer.vercel.app" class="btn btn-secondary">Design Another Badge</a>
+        </div>
+
+        <div class="footer">
+            <p>Questions about your order? <a href="https://magiccardprint.square.site/contact-us">Contact Us</a></p>
+            <p style="margin-top: 10px;">© 2025 MagicCardPrint • Smyrna, Tennessee</p>
+        </div>
+    </div>
+</body>
+</html>
