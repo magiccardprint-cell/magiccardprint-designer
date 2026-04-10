@@ -4914,7 +4914,12 @@ MagicCardPrint - Professional ID Card Printing Solutions
                     bulkExcelFileName: isBulkOrder && window.bulkExcelFile ? window.bulkExcelFile.name : null,
                     bulkPhotosCount: isBulkOrder && window.bulkPhotosFiles ? window.bulkPhotosFiles.length : 0,
                     hasArtwork: window.artworkUploaded || false,
-                    artworkFilesCount: window.artworkFilesData ? window.artworkFilesData.length : 0
+                    artworkFilesCount: window.artworkFilesData ? window.artworkFilesData.length : 0,
+                    // Accessories
+                    accessories: getSelectedAccessories(),
+                    accessoriesTotal: getAccessoriesTotal(),
+                    quantity: parseInt(document.getElementById('quantity').value) || 1,
+                    unitPrice: parseFloat(document.getElementById('unitPrice').textContent.replace('$','')) || 0
                 };
                 
                 // Get front image from canvas at FULL PRINT RESOLUTION
@@ -4997,7 +5002,11 @@ MagicCardPrint - Professional ID Card Printing Solutions
                         excelFile: excelBase64,
                         excelFileName: isBulkOrder && window.bulkExcelFile ? window.bulkExcelFile.name : null,
                         // Note: Bulk photos should be emailed separately for large orders
+						// Note: Bulk photos should be emailed separately for large orders
                         bulkPhotosCount: isBulkOrder && window.bulkPhotosFiles ? window.bulkPhotosFiles.length : 0,
+                        // Accessories
+                        accessories: getSelectedAccessories(),
+                        accessoriesTotal: getAccessoriesTotal(),
                         // Artwork files
                         hasArtwork: window.artworkUploaded || false,
                         artworkFiles: window.artworkFilesData || []
@@ -5038,7 +5047,10 @@ MagicCardPrint - Professional ID Card Printing Solutions
                         unitPrice: unitPrice,
                         itemName: `Custom ID Badge (${specifications.badgeStyle})`,
                         specifications: JSON.stringify(specifications),
-                        redirectUrl: 'https://magiccardprint-designer.vercel.app/thank-you.html'
+                        redirectUrl: 'https://magiccardprint-designer.vercel.app/thank-you.html',
+                        // Accessories
+                        accessories: getSelectedAccessories(),
+                        accessoriesTotal: getAccessoriesTotal()
                     })
                 });
                 
@@ -5063,6 +5075,18 @@ MagicCardPrint - Professional ID Card Printing Solutions
                 // Clear design flag so no exit warning shows
                 hasDesignContent = false;
                 
+                // Save order data for Thank You page
+                localStorage.setItem('lastMCPOrder', JSON.stringify({
+                    referenceId: referenceId,
+                    customerName: name,
+                    customerEmail: email,
+                    quantity: quantity,
+                    unitPrice: unitPrice,
+                    itemName: `Custom ID Badge (${specifications.badgeStyle})`,
+                    accessories: getSelectedAccessories(),
+                    accessoriesTotal: getAccessoriesTotal()
+                }));
+
                 // Redirect to Square checkout after 2 seconds
                 setTimeout(() => {
                     window.location.href = checkoutResult.checkoutUrl;
