@@ -3,8 +3,8 @@ const { Client, Environment } = require('square');
 // Initialize Square client
 const client = new Client({
     accessToken: process.env.SQUARE_ACCESS_TOKEN,
-    environment: process.env.SQUARE_ENVIRONMENT === 'production' 
-        ? Environment.Production 
+    environment: process.env.SQUARE_ENVIRONMENT === 'production'
+        ? Environment.Production
         : Environment.Sandbox
 });
 
@@ -24,15 +24,17 @@ module.exports = async (req, res) => {
     }
 
     try {
-        const { 
-            referenceId, 
-            customerName, 
-            customerEmail, 
-            quantity, 
-            unitPrice, 
+        const {
+            referenceId,
+            customerName,
+            customerEmail,
+            quantity,
+            unitPrice,
             itemName,
             specifications,
-            redirectUrl 
+            redirectUrl,
+            accessoriesTotal,   // NEW: total accessories cost
+            accessories         // NEW: array of selected accessories
         } = req.body;
 
         if (!referenceId || !quantity || !unitPrice) {
@@ -41,19 +43,42 @@ module.exports = async (req, res) => {
 
         // Get location ID (fetch from Square if not set in env)
         let locationId = process.env.SQUARE_LOCATION_ID;
-        
+
         if (!locationId) {
             const locationsResponse = await client.locationsApi.listLocations();
-            if (locationsResponse.result && locationsResponse.result.locations && locationsResponse.result.locations.length > 0) {
+            if (
+                locationsResponse.result &&
+                locationsResponse.result.locations &&
+                locationsResponse.result.locations.length > 0
+            ) {
                 locationId = locationsResponse.result.locations[0].id;
             } else {
                 throw new Error('No Square location found');
             }
         }
 
-        // Convert price to cents (Square uses smallest currency unit)
+        // Convert badge price to cents
         const priceInCents = Math.round(unitPrice * 100);
-        const totalAmount = priceInCents * quantity;
+        const badgeTotalCents = priceInCents * quantity;
+
+        // Convert accessories total to cents (default 0 if none selected)
+        const accessoriesTotalCents = Math.round((parseFloat(accessoriesTotal) || 0) * 100);
+
+        // Grand total = badges + accessories
+        const totalAmount = badgeTotalCents + accessoriesTotalCents;
+
+        // Build accessories summary for payment note
+        let accessoriesNote = 'None';
+        if (accessories && accessories.length > 0) {
+            accessoriesNote = accessories
+                .map(acc => `${acc.name} ($${acc.priceEach.toFixed(2)}/ea)`)
+                .join(', ');
+        }
+
+        // Build readable totals for payment note
+        const badgeTotalFormatted = (badgeTotalCents / 100).toFixed(2);
+        const accessoriesTotalFormatted = (accessoriesTotalCents / 100).toFixed(2);
+        const grandTotalFormatted = (totalAmount / 100).toFixed(2);
 
         // Create checkout using Square Checkout API
         const response = await client.checkoutApi.createPaymentLink({
@@ -73,7 +98,16 @@ module.exports = async (req, res) => {
             prePopulatedData: {
                 buyerEmail: customerEmail || undefined
             },
-            paymentNote: `MagicCardPrint Order | Ref: ${referenceId} | Qty: ${quantity} | Customer: ${customerName || 'N/A'}`
+            paymentNote: [
+                `MagicCardPrint Order`,
+                `Ref: ${referenceId}`,
+                `Customer: ${customerName || 'N/A'}`,
+                `Qty: ${quantity}`,
+                `Badges: $${badgeTotalFormatted}`,
+                `Accessories: $${accessoriesTotalFormatted}`,
+                `Grand Total: $${grandTotalFormatted}`,
+                `Accessories Selected: ${accessoriesNote}`
+            ].join(' | ')
         });
 
         if (response.result && response.result.paymentLink) {
@@ -89,9 +123,9 @@ module.exports = async (req, res) => {
 
     } catch (error) {
         console.error('Checkout error:', error);
-        return res.status(500).json({ 
+        return res.status(500).json({
             error: 'Failed to create checkout',
-            details: error.message 
+            details: error.message
         });
     }
 };
