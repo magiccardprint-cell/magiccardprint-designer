@@ -199,6 +199,76 @@
             background: #5a6268;
         }
 
+/* ── Accessories ── */
+.accessory-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px;
+    margin-bottom: 8px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: #fff;
+}
+
+.accessory-item:hover {
+    border-color: #667eea;
+    background: #f8f9ff;
+}
+
+.accessory-item:has(input:checked) {
+    border-color: #667eea;
+    background: #f0f2ff;
+}
+
+.accessory-item input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    accent-color: #667eea;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.accessory-info {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    flex: 1;
+}
+
+.accessory-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: #333;
+    line-height: 1.3;
+}
+
+.accessory-price {
+    font-size: 13px;
+    font-weight: 700;
+    color: #28a745;
+}
+
+.accessory-qty-row {
+    font-size: 12px;
+    color: #667eea;
+    font-weight: 600;
+    margin-top: 2px;
+}
+
+.accessory-img {
+    width: 64px;
+    height: 64px;
+    object-fit: contain;
+    border-radius: 6px;
+    border: 1px solid #eee;
+    background: #fafafa;
+    flex-shrink: 0;
+}
+
+		
         .btn-danger {
             background: #dc3545;
             color: white;
@@ -706,6 +776,112 @@
                     </div>
                 </div>
 
+<!-- ACCESSORIES SECTION -->
+<div class="section">
+    <div class="section-title">🪪 Badge Card Accessories
+        <span style="font-size:11px; font-weight:400; color:#888; text-transform:none;">
+            (Optional - Select all that apply)
+        </span>
+    </div>
+
+    <div id="accessoriesList">
+
+        <label class="accessory-item">
+            <input type="checkbox" class="accessory-check" value="2.50"
+                data-name="Hard Transparent Plastic Dual ID Card Holder"
+                onchange="updateAccessoriesTotal()">
+            <div class="accessory-info">
+                <span class="accessory-name">Hard Transparent Plastic Dual ID Card Holder</span>
+                <span class="accessory-price">$2.50</span>
+                <div class="accessory-qty-row" style="display:none;">
+                    <span class="accessory-qty-label">Qty: </span>
+                    <span class="accessory-qty-value">0</span>
+                </div>
+            </div>
+            <img src="https://res.cloudinary.com/dbx6y5l2d/image/upload/v1775850835/Image1_endvlb.jpg"
+                class="accessory-img" alt="Hard Transparent Plastic Dual ID Card Holder">
+        </label>
+
+        <label class="accessory-item">
+            <input type="checkbox" class="accessory-check" value="1.50"
+                data-name="Waterproof Transparent Double Sided ID Badge Case Holder"
+                onchange="updateAccessoriesTotal()">
+            <div class="accessory-info">
+                <span class="accessory-name">Waterproof Transparent Double Sided ID Badge Case Holder</span>
+                <span class="accessory-price">$1.50</span>
+                <div class="accessory-qty-row" style="display:none;">
+                    <span class="accessory-qty-label">Qty: </span>
+                    <span class="accessory-qty-value">0</span>
+                </div>
+            </div>
+            <img src="https://res.cloudinary.com/dbx6y5l2d/image/upload/v1775850827/Image1_twnisz.jpg"
+                class="accessory-img" alt="Waterproof Transparent Double Sided ID Badge Case Holder">
+        </label>
+
+        <label class="accessory-item">
+            <input type="checkbox" class="accessory-check" value="0.85"
+                data-name="Clear PVC Card Holder Waterproof Resealable"
+                onchange="updateAccessoriesTotal()">
+            <div class="accessory-info">
+                <span class="accessory-name">Clear PVC Card Holder Waterproof Resealable</span>
+                <span class="accessory-price">$0.85</span>
+                <div class="accessory-qty-row" style="display:none;">
+                    <span class="accessory-qty-label">Qty: </span>
+                    <span class="accessory-qty-value">0</span>
+                </div>
+            </div>
+            <img src="https://res.cloudinary.com/dbx6y5l2d/image/upload/v1775850841/Image1_xc7ae1.jpg"
+                class="accessory-img" alt="Clear PVC Card Holder Waterproof Resealable">
+        </label>
+
+        <label class="accessory-item">
+            <input type="checkbox" class="accessory-check" value="1.25"
+                data-name="Black Braid Woven Lanyard with Swivel J Hook"
+                onchange="updateAccessoriesTotal()">
+            <div class="accessory-info">
+                <span class="accessory-name">Black Braid Woven Lanyard with Swivel J Hook</span>
+                <span class="accessory-price">$1.25</span>
+                <div class="accessory-qty-row" style="display:none;">
+                    <span class="accessory-qty-label">Qty: </span>
+                    <span class="accessory-qty-value">0</span>
+                </div>
+            </div>
+            <img src="https://res.cloudinary.com/dbx6y5l2d/image/upload/v1775851053/lanyard_dc1gwm.jpg"
+                class="accessory-img" alt="Black Braid Woven Lanyard with Swivel J Hook">
+        </label>
+
+        <label class="accessory-item">
+            <input type="checkbox" class="accessory-check" value="0.75"
+                data-name="Retractable ID Card Badge Holder Reel"
+                onchange="updateAccessoriesTotal()">
+            <div class="accessory-info">
+                <span class="accessory-name">Retractable ID Card Badge Holder Reel</span>
+                <span class="accessory-price">$0.75</span>
+                <div class="accessory-qty-row" style="display:none;">
+                    <span class="accessory-qty-label">Qty: </span>
+                    <span class="accessory-qty-value">0</span>
+                </div>
+            </div>
+            <img src="https://res.cloudinary.com/dbx6y5l2d/image/upload/v1775850822/RetractableReel_jjlmlo.jpg"
+                class="accessory-img" alt="Retractable ID Card Badge Holder Reel">
+        </label>
+
+    </div>
+
+    <!-- Accessories subtotal -->
+    <div id="accessoriesSubtotal" style="display:none; margin-top:12px;
+        padding:10px; background:#e8f5e9; border-radius:6px; font-size:13px; color:#2e7d32;">
+        ➕ Accessories Added: <strong id="accessoriesSubtotalAmount">$0.00</strong>
+        <span style="color:#666; font-size:12px;">
+            (<span id="accessoriesQtyNote"></span>)
+        </span>
+    </div>
+</div>
+
+
+
+
+				
                 <!-- Template Selection -->
                 <div class="section">
                     <div class="section-title">🎨 Templates</div>
@@ -5295,7 +5471,83 @@ MagicCardPrint - Professional ID Card Printing Solutions
                 savingsDiv.innerHTML = '💡 Order more to save!';
             }
         }
-        
+
+// ============================================
+// ACCESSORIES LOGIC
+// ============================================
+
+function updateAccessoriesTotal() {
+    const qty = parseInt(document.getElementById('quantity').value) || 1;
+    const checks = document.querySelectorAll('.accessory-check');
+
+    let accessoriesPerCard = 0;
+    let checkedCount = 0;
+
+    checks.forEach(cb => {
+        const qtyRow = cb.closest('.accessory-item').querySelector('.accessory-qty-row');
+        const qtyValue = cb.closest('.accessory-item').querySelector('.accessory-qty-value');
+
+        if (cb.checked) {
+            accessoriesPerCard += parseFloat(cb.value);
+            checkedCount++;
+            qtyRow.style.display = 'block';
+            qtyValue.textContent = qty;
+        } else {
+            qtyRow.style.display = 'none';
+            qtyValue.textContent = 0;
+        }
+    });
+
+    const accessoriesTotal = accessoriesPerCard * qty;
+    const subtotalDiv = document.getElementById('accessoriesSubtotal');
+
+    if (checkedCount > 0) {
+        subtotalDiv.style.display = 'block';
+        document.getElementById('accessoriesSubtotalAmount').textContent =
+            '$' + accessoriesTotal.toFixed(2);
+        document.getElementById('accessoriesQtyNote').textContent =
+            `$${accessoriesPerCard.toFixed(2)} x ${qty} badge${qty > 1 ? 's' : ''}`;
+    } else {
+        subtotalDiv.style.display = 'none';
+    }
+
+    refreshGrandTotal();
+}
+
+function getAccessoriesTotal() {
+    const qty = parseInt(document.getElementById('quantity').value) || 1;
+    const checks = document.querySelectorAll('.accessory-check:checked');
+    let accessoriesPerCard = 0;
+    checks.forEach(cb => accessoriesPerCard += parseFloat(cb.value));
+    return accessoriesPerCard * qty;
+}
+
+function getSelectedAccessories() {
+    const checks = document.querySelectorAll('.accessory-check:checked');
+    const selected = [];
+    checks.forEach(cb => {
+        selected.push({
+            name: cb.getAttribute('data-name'),
+            priceEach: parseFloat(cb.value)
+        });
+    });
+    return selected;
+}
+
+function refreshGrandTotal() {
+    const qty = parseInt(document.getElementById('quantity').value) || 1;
+    const badgeStyle = document.getElementById('badgeStyle').value;
+    let unit = getPriceForQuantity(qty, badgeStyle) + magneticStripeUpcharge;
+
+    const badgeTotal = unit * qty;
+    const accessoriesTotal = getAccessoriesTotal();
+    const grandTotal = badgeTotal + accessoriesTotal;
+
+    document.getElementById('unitPrice').textContent = '$' + unit.toFixed(2);
+    document.getElementById('totalPrice').textContent = '$' + grandTotal.toFixed(2);
+}
+
+		
         function updatePriceByType() {
             const qty = parseInt(document.getElementById('quantity').value) || 1;
             const badgeStyle = document.getElementById('badgeStyle').value;
@@ -5372,6 +5624,8 @@ MagicCardPrint - Professional ID Card Printing Solutions
             // Also update calculator
             document.getElementById('calcQuantity').value = finalQty;
             updateCalculator();
+			// Refresh accessory quantities when badge qty changes
+    		updateAccessoriesTotal();
         }
         
         // Update card type and pricing
