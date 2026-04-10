@@ -27,6 +27,7 @@
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
             padding: 50px;
             max-width: 600px;
+            width: 100%;
             text-align: center;
         }
 
@@ -67,6 +68,7 @@
             margin-bottom: 20px;
         }
 
+        /* ── Order Info Box ── */
         .order-info {
             background: #f8f9fa;
             border-radius: 8px;
@@ -99,6 +101,72 @@
             font-weight: 600;
         }
 
+        /* ── Order Breakdown Box ── */
+        .order-breakdown {
+            background: #f8f9fa;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .order-breakdown h3 {
+            font-size: 16px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .breakdown-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            font-size: 14px;
+            color: #444;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .breakdown-section-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 10px 0 4px 0;
+        }
+
+        .accessory-line {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 0 6px 10px;
+            font-size: 13px;
+            color: #555;
+            border-bottom: 1px solid #f5f5f5;
+        }
+
+        .breakdown-total-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 0 0 0;
+            margin-top: 10px;
+            border-top: 2px solid #333;
+            font-size: 17px;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .grand-total-amount {
+            color: #28a745;
+            font-size: 20px;
+        }
+
+        /* ── Next Steps ── */
         .next-steps {
             background: #e8f5e9;
             border-radius: 8px;
@@ -134,6 +202,7 @@
             font-weight: bold;
         }
 
+        /* ── Buttons ── */
         .btn {
             display: inline-block;
             padding: 14px 30px;
@@ -164,6 +233,7 @@
             background: #e0e0e0;
         }
 
+        /* ── Footer ── */
         .footer {
             margin-top: 30px;
             padding-top: 20px;
@@ -180,6 +250,8 @@
 </head>
 <body>
     <div class="container">
+
+        <!-- Success Icon -->
         <div class="success-icon">
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
@@ -188,9 +260,9 @@
 
         <h1>Thank You!</h1>
         <p class="subtitle">Your order has been placed successfully</p>
-
         <p>We've received your badge order and design files. You'll receive a confirmation email shortly with your order details.</p>
 
+        <!-- Order Information -->
         <div class="order-info">
             <h3>📋 Order Information</h3>
             <div class="info-row">
@@ -205,8 +277,41 @@
                 <span class="info-label">Payment:</span>
                 <span class="info-value">Processed ✓</span>
             </div>
+            <!-- Dynamically populated -->
+            <div class="info-row" id="refIdRow" style="display:none;">
+                <span class="info-label">Reference ID:</span>
+                <span class="info-value" id="displayRefId" style="color:#667eea;"></span>
+            </div>
+            <div class="info-row" id="customerNameRow" style="display:none;">
+                <span class="info-label">Customer:</span>
+                <span class="info-value" id="displayCustomerName"></span>
+            </div>
         </div>
 
+        <!-- Order Breakdown (shown only if localStorage data exists) -->
+        <div class="order-breakdown" id="orderBreakdown" style="display:none;">
+            <h3>🧾 Order Summary</h3>
+
+            <!-- Badge line -->
+            <div class="breakdown-row">
+                <span id="badgeLineLabel">Custom ID Badge</span>
+                <span id="badgeLineTotal">—</span>
+            </div>
+
+            <!-- Accessories section -->
+            <div id="accessoriesBreakdown" style="display:none;">
+                <div class="breakdown-section-label">Accessories</div>
+                <div id="accessoriesLineItems"></div>
+            </div>
+
+            <!-- Grand Total -->
+            <div class="breakdown-total-row">
+                <span>Grand Total</span>
+                <span class="grand-total-amount" id="grandTotalDisplay">—</span>
+            </div>
+        </div>
+
+        <!-- Next Steps -->
         <div class="next-steps">
             <h3>🚀 What Happens Next?</h3>
             <ul>
@@ -217,15 +322,77 @@
             </ul>
         </div>
 
+        <!-- Buttons -->
         <div>
             <a href="https://magiccardprint.square.site" class="btn btn-primary">Return to Shop</a>
             <a href="https://magiccardprint-designer.vercel.app" class="btn btn-secondary">Design Another Badge</a>
         </div>
 
+        <!-- Footer -->
         <div class="footer">
             <p>Questions about your order? <a href="https://magiccardprint.square.site/contact-us">Contact Us</a></p>
             <p style="margin-top: 10px;">© 2025 MagicCardPrint • Smyrna, Tennessee</p>
         </div>
     </div>
+
+    <script>
+        window.addEventListener('DOMContentLoaded', function () {
+            try {
+                const orderData = JSON.parse(localStorage.getItem('lastMCPOrder') || '{}');
+
+                if (orderData && orderData.referenceId) {
+
+                    // Reference ID
+                    document.getElementById('refIdRow').style.display = 'flex';
+                    document.getElementById('displayRefId').textContent = orderData.referenceId;
+
+                    // Customer name
+                    if (orderData.customerName) {
+                        document.getElementById('customerNameRow').style.display = 'flex';
+                        document.getElementById('displayCustomerName').textContent = orderData.customerName;
+                    }
+
+                    // Order breakdown
+                    const qty = orderData.quantity || 1;
+                    const unitPrice = parseFloat(orderData.unitPrice) || 0;
+                    const badgeTotal = unitPrice * qty;
+                    const accessoriesTotal = parseFloat(orderData.accessoriesTotal) || 0;
+                    const grandTotal = badgeTotal + accessoriesTotal;
+
+                    document.getElementById('orderBreakdown').style.display = 'block';
+                    document.getElementById('badgeLineLabel').textContent =
+                        `${orderData.itemName || 'Custom ID Badge'} × ${qty}`;
+                    document.getElementById('badgeLineTotal').textContent =
+                        '$' + badgeTotal.toFixed(2);
+
+                    // Accessories
+                    if (orderData.accessories && orderData.accessories.length > 0) {
+                        document.getElementById('accessoriesBreakdown').style.display = 'block';
+                        const container = document.getElementById('accessoriesLineItems');
+
+                        orderData.accessories.forEach(function (acc) {
+                            const accTotal = acc.priceEach * qty;
+                            const div = document.createElement('div');
+                            div.className = 'accessory-line';
+                            div.innerHTML =
+                                '<span>' + acc.name + ' × ' + qty + '</span>' +
+                                '<span>$' + accTotal.toFixed(2) + '</span>';
+                            container.appendChild(div);
+                        });
+                    }
+
+                    // Grand total
+                    document.getElementById('grandTotalDisplay').textContent =
+                        '$' + grandTotal.toFixed(2);
+
+                    // Clear localStorage after displaying
+                    localStorage.removeItem('lastMCPOrder');
+                }
+
+            } catch (e) {
+                console.log('No order data to display:', e);
+            }
+        });
+    </script>
 </body>
 </html>
