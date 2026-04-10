@@ -2334,16 +2334,16 @@
                 
                 // Slot dimensions (same for both orientations)
                 slotWidth = 80 * SCALE;   // Wider slot (about 15mm)
-                slotHeight = 18 * SCALE;  // Taller for visibility (about 4mm)
+                slotHeight = 30 * SCALE;  // Taller for visibility (about 4mm)
                 
                 // Center horizontally based on actual canvas width
                 slotX = (canvasWidth / 2) - (slotWidth / 2);
                 
                 // Slot Y position differs per orientation
                 if (orientation === 'portrait') {
-                    slotY = 22 * SCALE;  // Portrait: slot near top center
+                    slotY = 35 * SCALE;  // Portrait: slot near top center
                 } else {
-                    slotY = 22 * SCALE;  // Landscape: slot near left-center top
+                    slotY = 35 * SCALE;  // Landscape: slot near left-center top
                 }
                 
                 slotObject = new fabric.Rect({
