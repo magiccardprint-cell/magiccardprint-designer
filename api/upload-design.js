@@ -23,12 +23,12 @@ module.exports = async (req, res) => {
     }
 
     try {
-        const { 
-            frontImage, 
-            backImage, 
-            referenceId, 
-            customerName, 
-            customerEmail, 
+        const {
+            frontImage,
+            backImage,
+            referenceId,
+            customerName,
+            customerEmail,
             specifications,
             // Bulk order data
             isBulkOrder,
@@ -38,7 +38,10 @@ module.exports = async (req, res) => {
             bulkPhotos,
             // Artwork files
             artworkFiles,
-            hasArtwork
+            hasArtwork,
+            // NEW: Accessories
+            accessories,
+            accessoriesTotal
         } = req.body;
 
         if (!frontImage || !referenceId) {
@@ -80,7 +83,6 @@ module.exports = async (req, res) => {
                 uploadResults.push({ type: 'excel', url: excelResult.secure_url });
             } catch (excelError) {
                 console.error('Excel upload error:', excelError);
-                // Continue even if Excel upload fails
             }
         }
 
@@ -89,7 +91,6 @@ module.exports = async (req, res) => {
             const photosFolder = `${folder}/photos`;
             for (const photo of bulkPhotos) {
                 try {
-                    // Remove extension from name for public_id
                     const photoName = photo.name.replace(/\.[^/.]+$/, '');
                     const photoResult = await cloudinary.uploader.upload(photo.data, {
                         folder: photosFolder,
@@ -100,7 +101,6 @@ module.exports = async (req, res) => {
                     uploadResults.push({ type: 'photo', name: photo.name, url: photoResult.secure_url });
                 } catch (photoError) {
                     console.error(`Photo upload error for ${photo.name}:`, photoError);
-                    // Continue with other photos
                 }
             }
         }
@@ -110,7 +110,6 @@ module.exports = async (req, res) => {
             const artworkFolder = `${folder}/artwork`;
             for (const artwork of artworkFiles) {
                 try {
-                    // Remove extension from name for public_id
                     const artworkName = artwork.name.replace(/\.[^/.]+$/, '');
                     const artworkResult = await cloudinary.uploader.upload(artwork.data, {
                         folder: artworkFolder,
@@ -121,12 +120,18 @@ module.exports = async (req, res) => {
                     uploadResults.push({ type: 'artwork', name: artwork.name, url: artworkResult.secure_url });
                 } catch (artworkError) {
                     console.error(`Artwork upload error for ${artwork.name}:`, artworkError);
-                    // Continue with other artwork files
                 }
             }
         }
 
-        // Upload specifications as a JSON file
+        // Build pricing summary for spec file
+        const quantity = specifications ? (specifications.quantity || 1) : 1;
+        const unitPrice = specifications ? (parseFloat(specifications.unitPrice) || 0) : 0;
+        const badgeSubtotal = unitPrice * quantity;
+        const accessSubtotal = parseFloat(accessoriesTotal) || 0;
+        const grandTotal = badgeSubtotal + accessSubtotal;
+
+        // Upload specifications as a JSON file — now includes accessories
         const specContent = {
             referenceId,
             customerName,
@@ -138,6 +143,15 @@ module.exports = async (req, res) => {
             bulkPhotosCount: bulkPhotos ? bulkPhotos.length : 0,
             hasArtwork: hasArtwork || false,
             artworkFilesCount: artworkFiles ? artworkFiles.length : 0,
+            // NEW: Accessories
+            accessories: accessories || [],
+            accessoriesTotal: accessSubtotal,
+            // NEW: Order total summary
+            orderTotals: {
+                badgeSubtotal: badgeSubtotal.toFixed(2),
+                accessoriesSubtotal: accessSubtotal.toFixed(2),
+                grandTotal: grandTotal.toFixed(2)
+            },
             uploadedAt: new Date().toISOString(),
             uploadedFiles: uploadResults
         };
@@ -165,6 +179,11 @@ module.exports = async (req, res) => {
                 bulkPhotosCount: bulkPhotos ? bulkPhotos.length : 0,
                 hasArtwork: hasArtwork || false,
                 artworkFilesCount: artworkFiles ? artworkFiles.length : 0,
+                // NEW: Accessories
+                accessories: accessories || [],
+                accessoriesTotal: accessSubtotal,
+                badgeSubtotal,
+                grandTotal,
                 uploadResults
             });
         } catch (emailError) {
@@ -181,14 +200,16 @@ module.exports = async (req, res) => {
 
     } catch (error) {
         console.error('Upload error:', error);
-        return res.status(500).json({ 
+        return res.status(500).json({
             error: 'Failed to upload design',
-            details: error.message 
+            details: error.message
         });
     }
 };
 
+// ─────────────────────────────────────────────
 // Email notification function
+// ─────────────────────────────────────────────
 async function sendEmailNotification(data) {
     const {
         referenceId,
@@ -201,12 +222,15 @@ async function sendEmailNotification(data) {
         bulkPhotosCount,
         hasArtwork,
         artworkFilesCount,
+        accessories,
+        accessoriesTotal,
+        badgeSubtotal,
+        grandTotal,
         uploadResults
     } = data;
 
-    // Build email content
     const emailSubject = `New Order: ${referenceId} - ${customerName}`;
-    
+
     let emailBody = `
 NEW MAGICCARDPRINT ORDER
 ========================
@@ -247,6 +271,37 @@ Note: Customer has uploaded complete artwork design files.
 `;
     }
 
+    // NEW: Accessories section
+    if (accessories && accessories.length > 0) {
+        emailBody += `
+ACCESSORIES ORDERED
+-------------------
+`;
+        accessories.forEach(acc => {
+            const qty = specifications.quantity || 1;
+            const lineTotal = (acc.priceEach * qty).toFixed(2);
+            emailBody += `• ${acc.name}\n`;
+            emailBody += `  $${acc.priceEach.toFixed(2)} each × ${qty} = $${lineTotal}\n`;
+        });
+        emailBody += `Accessories Subtotal: $${accessoriesTotal.toFixed(2)}\n`;
+    } else {
+        emailBody += `
+ACCESSORIES ORDERED
+-------------------
+None
+`;
+    }
+
+    // NEW: Order total summary
+    emailBody += `
+ORDER TOTAL SUMMARY
+-------------------
+Badges Subtotal:       $${badgeSubtotal.toFixed(2)}
+Accessories Subtotal:  $${accessoriesTotal.toFixed(2)}
+                       --------
+GRAND TOTAL:           $${grandTotal.toFixed(2)}
+`;
+
     emailBody += `
 CLOUDINARY FILES
 ----------------
@@ -271,7 +326,7 @@ Folder: magiccardprint/${referenceId}
 MagicCardPrint Badge Designer
 `;
 
-    // Try to send via Resend API if configured
+    // Send via Resend API if configured
     if (process.env.RESEND_API_KEY) {
         const response = await fetch('https://api.resend.com/emails', {
             method: 'POST',
@@ -290,10 +345,10 @@ MagicCardPrint Badge Designer
         if (!response.ok) {
             throw new Error('Failed to send email via Resend');
         }
-        
+
         console.log('Email sent successfully via Resend');
     } else {
-        // Log email content if no email service configured
+        // Log if no email service configured
         console.log('=== EMAIL NOTIFICATION (No email service configured) ===');
         console.log('To: magiccardprint@gmail.com');
         console.log('Subject:', emailSubject);
