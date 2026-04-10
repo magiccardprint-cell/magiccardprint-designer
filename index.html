@@ -1250,13 +1250,22 @@
 
 
 <!-- ACCESSORIES SECTION -->
-<div class="section">
+<div class="section" style="margin-top: 20px;">
     <div class="section-title">🪪 Badge Card Accessories
         <span style="font-size:11px; font-weight:400; color:#888; text-transform:none;">
             (Optional - Select all that apply)
         </span>
     </div>
 
+	<p style="font-size: 12px; color: #666; margin-bottom: 12px;">
+        To check the actual accessories photos, please visit our 
+        <a href="https://magiccardprint.square.site/accessories" 
+           target="_blank" 
+           style="color: #667eea; font-weight: 600; text-decoration: underline;">
+            Accessories Page
+        </a>.
+    </p>
+	
     <div id="accessoriesList">
 
         <label class="accessory-item">
@@ -2329,7 +2338,13 @@
                 
                 // Center horizontally based on actual canvas width
                 slotX = (canvasWidth / 2) - (slotWidth / 2);
-                slotY = 15 * SCALE;  // Fixed distance from top
+                
+                // Slot Y position differs per orientation
+                if (orientation === 'portrait') {
+                    slotY = 22 * SCALE;  // Portrait: slot near top center
+                } else {
+                    slotY = 22 * SCALE;  // Landscape: slot near left-center top
+                }
                 
                 slotObject = new fabric.Rect({
                     left: slotX,
