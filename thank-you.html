@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Order Confirmed – MagicCardPrint</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -50,10 +50,11 @@
       justify-content: space-between;
     }
     .nav-brand {
-      font-family: 'Syne', sans-serif;
-      font-size: 20px;
-      font-weight: 800;
-      letter-spacing: -0.5px;
+      font-family: 'Oswald', sans-serif;
+      font-size: 22px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
       text-decoration: none;
       color: var(--black);
     }
@@ -115,10 +116,11 @@
       animation: fadeUp 0.4s 0.2s ease both;
     }
     .hero h1 {
-      font-family: 'Syne', sans-serif;
-      font-size: 40px;
-      font-weight: 800;
-      letter-spacing: -1px;
+      font-family: 'Oswald', sans-serif;
+      font-size: 48px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
       margin-bottom: 12px;
       animation: fadeUp 0.4s 0.3s ease both;
     }
@@ -137,10 +139,7 @@
       background: var(--black);
       color: white;
       padding: 12px 24px;
-      font-family: 'Syne', sans-serif;
-      font-size: 15px;
-      font-weight: 700;
-      letter-spacing: 1px;
+      font-family: 'Oswald', sans-serif;
       animation: fadeUp 0.4s 0.5s ease both;
     }
     .order-number-badge span {
@@ -204,10 +203,11 @@
       stroke-width: 2;
     }
     .card-title {
-      font-family: 'Syne', sans-serif;
+      font-family: 'Oswald', sans-serif;
       font-size: 16px;
-      font-weight: 700;
-      letter-spacing: -0.3px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
     }
 
     /* ── ORDER DETAILS TABLE ── */
@@ -255,7 +255,7 @@
     }
     .pricing-row:last-child { border-bottom: none; }
     .pricing-row.total {
-      font-family: 'Syne', sans-serif;
+      font-family: 'Oswald', sans-serif;
       font-size: 18px;
       font-weight: 700;
       border-top: 2px solid var(--black);
@@ -550,6 +550,13 @@
         <span class="label">Shipping</span>
         <span class="free-tag">FREE</span>
       </div>
+      <div class="pricing-row" id="discountRow" style="display:none;">
+        <span class="label">Promo Discount</span>
+        <span style="color:#1a7a4a; font-weight:600;" id="priceDiscount">—</span>
+      </div>
+      <div class="pricing-note" style="font-size:12px; color:#999; padding: 8px 0; font-style:italic;">
+        * If a promo code was applied, your final discounted total is shown in your Square payment receipt sent to your email.
+      </div>
       <div class="pricing-row total">
         <span class="label">Total Paid</span>
         <span id="priceGrandTotal">—</span>
@@ -583,7 +590,7 @@
             Design Review & Production
             <span class="timeline-badge badge-active">In Progress</span>
           </div>
-          <div class="timeline-desc">We review your badge design for print quality and begin production. If we notice any issues, we'll contact you before printing.</div>
+          <div class="timeline-desc">We review your badge design for print quality and accuracy. If any adjustments are needed, we'll send you a proof for approval via <strong>Ziflow</strong> (online proofing) or <strong>email</strong> — depending on your order. No printing begins until your design is approved.</div>
         </div>
       </div>
       <div class="timeline-item">
